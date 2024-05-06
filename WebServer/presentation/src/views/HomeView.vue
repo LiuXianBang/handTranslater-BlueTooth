@@ -1,15 +1,37 @@
 <script setup>
 
 
-import { onMounted } from 'vue'
+import { onMounted,onBeforeMount  } from 'vue'
 import $ from 'jquery';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+
+function SetOwner(Owner, obj) {
+    for (let i = 0; i < obj.children.length; i++) {
+        obj.children[i].Owner = Owner;
+        SetOwner(Owner, obj.children[i]);
+    }
+}
+function getURLParameters() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var paramsArray = new Array();
+    urlParams.forEach(function(value, key) {
+        paramsArray[key] = value;
+    });
+    return paramsArray;
+}
+
+
+onBeforeMount(() => {
+  clearInterval();
+})
+
 onMounted(() => {
-    document.title = 'Home';
     
+    document.title = 'Home';
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -20,12 +42,12 @@ onMounted(() => {
         canvas: canvas,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    window.onresize = function () {
+    
+    $( window ).on( "resize", function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize( window.innerWidth, window.innerHeight );
-    };
+    });
 
     const controls = new OrbitControls( camera, renderer.domElement );
 
@@ -37,26 +59,28 @@ onMounted(() => {
     const dirLight = new THREE.DirectionalLight( 0xffffff, 3 );
     dirLight.position.set( 0, 20, 10 );
     scene.add( dirLight );
-    // const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    // const cube = new THREE.Mesh( geometry, material );
-    // scene.add( cube );
+
     const loader = new GLTFLoader();
     loader.load( 'src/assets/models/RobotExpressive.glb', function ( gltf ) {
-
-        const model = gltf.scene;
-        scene.add( model );
-
-        createGUI( model, gltf.animations );
-
+        gltf.scene.lookAt(camera.position);
+        gltf.scene.name = "导游";
+        //Create world
+        SetOwner("导游", gltf.scene);
+        scene.add(gltf.scene);
     })
     camera.position.z = 10;
 
     function animate() {
         requestAnimationFrame( animate );
+        for (let id in scene.children) {
+            const obj = scene.children[id];
 
-        // cube.rotation.x += 0.01;
-        // cube.rotation.y += 0.01;
+            if (obj.name == "导游") {
+                obj.rotation.y += 0.01;
+                obj.rotation.x += 0.01;
+            }
+        }
+        
         controls.update();
         renderer.render( scene, camera );
     }
@@ -69,6 +93,7 @@ onMounted(() => {
 
 <template>
     <canvas id="renderCanvas" class="renderArea"></canvas>
+    
 </template>
 <style scoped>
 
