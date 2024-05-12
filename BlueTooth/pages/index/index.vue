@@ -1,44 +1,38 @@
 <template>
 	<view class="content">
-<!-- 		<web-view class="web" :webview-styles="webviewStyles" 
+		<!-- 		<web-view class="web" :webview-styles="webviewStyles" 
 			:src=url 
 			
 		></web-view> -->
 
 		<view class="text-area">
-			<view >
+			<view>
 				<div>{{found_text}}</div>
 				<div>服务:{{cuurent_service}}</div>
 				<div>监听:{{notifyUuid}}</div>
 				<div>发送:{{writeUuid}}</div>
-				
+
 			</view>
 			<button @click="initBlue">初始化蓝牙</button>
 			<button @click="discovery">搜索</button>
-			<scroll-view
-				scroll-y
-				class="box"
-			>
+			<scroll-view scroll-y class="box">
 				<view class="item" v-for="item in bluetoothlist">
 					<view>
-						<text>id: {{ item.deviceId }}</text>    
+						<text>id: {{ item.deviceId }}</text>
 					</view>
 					<view>
-						<text>name: {{ item.name }}</text>  
+						<text>name: {{ item.name }}</text>
 					</view>
 				</view>
 			</scroll-view>
-			
-	
-		
+
+
+
 			<button @click="getservices">搜索服务</button>
-			<scroll-view
-				scroll-y
-				class="box"
-			>
+			<scroll-view scroll-y class="box">
 				<view class="item" v-for="service in servicelist">
 					<view>
-						<button @click="getCharacteId(service.uuid)" >uuid: {{ service.uuid }}</button>
+						<button @click="getCharacteId(service.uuid)">uuid: {{ service.uuid }}</button>
 
 					</view>
 				</view>
@@ -50,18 +44,22 @@
 </template>
 
 <script>
-
-	import { defineComponent, onMounted, ref } from 'vue'
+	import {
+		defineComponent,
+		onMounted,
+		ref
+	} from 'vue'
 
 	const bluetoothlist = ref([])
 	const servicelist = ref([])
-	
+
 	var url = ref("http://localhost:5173");
-	var found_text =  ref("未找到");
+	var found_text = ref("未找到");
 	var connected_device = ref("")
 	var cuurent_service = ref("")
 	var notifyUuid = ref("")
 	var writeUuid = ref("")
+
 	function string2buffer(str) {
 		let val = ""
 		if (!str) return;
@@ -80,8 +78,8 @@
 	}
 
 
-	function getservices(){
-		if(connected_device.value == ""){
+	function getservices() {
+		if (connected_device.value == "") {
 			uni.showToast({
 				title: '请先连接蓝牙',
 				type: 'error',
@@ -93,13 +91,14 @@
 			deviceId: connected_device.value,
 			success: function(res) {
 				console.log(res)
-				for(var i = 0; i <  res.services.length; i++) {
+				for (var i = 0; i < res.services.length; i++) {
 					servicelist.value.push(res.services[i])
 					console.log(servicelist)
 				}
 			}
 		})
 	}
+
 	function getCharacteId(services) {
 		console.log(services)
 		uni.getBLEDeviceCharacteristics({
@@ -116,7 +115,7 @@
 						writeUuid.value = model.uuid
 					}
 					if (model.properties.notify) {
-	
+
 						// that.notifyUuid = model.uuid
 						cuurent_service.value = services
 						notifyUuid.value = model.uuid
@@ -124,10 +123,11 @@
 					}
 				}
 			}
-		})	
+		})
 	}
+
 	function initBlue() {
-		
+
 		uni.openBluetoothAdapter({
 			success(res) {
 				uni.showToast({
@@ -149,67 +149,68 @@
 			}
 		})
 	}
-	
+
 	function discovery() {
 		connected_device.value = ""
 		bluetoothlist.value = []
-	    uni.startBluetoothDevicesDiscovery({
-	        success(res) {
-	            console.log('开始搜索')
+		uni.startBluetoothDevicesDiscovery({
+			success(res) {
+				console.log('开始搜索')
 				uni.showLoading({
 					title: '正在搜索设备',
 				})
-	            // 开启监听回调
-	            uni.onBluetoothDeviceFound(found)
-	        },
-	        fail(err) {
-	            console.log('搜索失败')
-	            console.error(err)
-	        }
-	    })
+				// 开启监听回调
+				uni.onBluetoothDeviceFound(found)
+			},
+			fail(err) {
+				console.log('搜索失败')
+				console.error(err)
+			}
+		})
 	}
+
 	function connetBlue(device) {
 		const deviceId = device.deviceId
 		uni.createBLEConnection({
-		  // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
-		  deviceId,
-		  success(res) {
-		    console.log(res)
-			uni.showToast({
-				title: '连接成功',
-				icon: 'success',
-				duration: 800
-			})
-			connected_device.value = device.deviceId
-			return true
-		  },
-		  fail(res) {
-		  	uni.showToast({
-		  		title: '连接失败',
-		  		type: 'error',
-		  		icon: 'none'
-		  	});
-			console.log(res)
-			return false
-		  }
+			// 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+			deviceId,
+			success(res) {
+				console.log(res)
+				uni.showToast({
+					title: '连接成功',
+					icon: 'success',
+					duration: 800
+				})
+				connected_device.value = device.deviceId
+				return true
+			},
+			fail(res) {
+				uni.showToast({
+					title: '连接失败',
+					type: 'error',
+					icon: 'none'
+				});
+				console.log(res)
+				return false
+			}
 		})
 	}
-	
+
 	function found(res) {
-		if (connected_device.value != ""){
+		if (connected_device.value != "") {
 			return
 		}
-		for(var i = 0; i < res.devices.length; i++) {
+		for (var i = 0; i < res.devices.length; i++) {
 			var device = res.devices[i]
-			if (device.name == ""){
+			if (device.name == "") {
 				continue
 			}
-			if (device.name == "TESTBLE"){
+			if (device.name == "TESTBLE") {
 				console.log("找到目标")
 				found_text.value = "找到目标"
 				uni.stopBeaconDiscovery()
 				bluetoothlist.value.push(device)
-				if(connetBlue(device)){
+				if (connetBlue(device)) {
 					break
 				}
 			}
@@ -220,46 +221,49 @@
 		// })
 		// bluetoothlist.value.push(res.devices[0])
 	}
+
 	function string2ArrayBuffer(str) {
-      // 首先将字符串转为16进制
-      let val = ""
-      for (let i = 0; i < str.length; i++) {
-        if (val === '') {
-          val = str.charCodeAt(i).toString(16)
-        } else {
-          val += ',' + str.charCodeAt(i).toString(16)
-        }
-      }
-      // 将16进制转化为ArrayBuffer
-      return new Uint8Array(val.match(/[\da-f]{2}/gi).map(function (h) {
-        return parseInt(h, 16)
-      })).buffer
-    }
-	function ab2hex(buffer) {
-	  const hexArr = Array.prototype.map.call(
-	    new Uint8Array(buffer),
-	    function (bit) {
-	      return ('00' + bit.toString(16)).slice(-2)
-	    }
-	  )
-	  return hexArr.join('')
+		// 首先将字符串转为16进制
+		let val = ""
+		for (let i = 0; i < str.length; i++) {
+			if (val === '') {
+				val = str.charCodeAt(i).toString(16)
+			} else {
+				val += ',' + str.charCodeAt(i).toString(16)
+			}
+		}
+		// 将16进制转化为ArrayBuffer
+		return new Uint8Array(val.match(/[\da-f]{2}/gi).map(function(h) {
+			return parseInt(h, 16)
+		})).buffer
 	}
+
+	function ab2hex(buffer) {
+		const hexArr = Array.prototype.map.call(
+			new Uint8Array(buffer),
+			function(bit) {
+				return ('00' + bit.toString(16)).slice(-2)
+			}
+		)
+		return hexArr.join('')
+	}
+
 	function hex2String(hex_str) {
-      let trimedStr = hex_str.trim();
-      let rawStr = trimedStr.substr(0,2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
-      let len = rawStr.length;
-      if(len % 2 !== 0) {
-        console.log("Illegal Format ASCII Code!");
-        return "";
-      }
-      let curCharCode;
-      let resultStr = [];
-      for(let i = 0; i < len;i = i + 2) {
-        curCharCode = parseInt(rawStr.substr(i, 2), 16); // ASCII Code Value
-        resultStr.push(String.fromCharCode(curCharCode));
-      }
-      return resultStr.join("");
-    }
+		let trimedStr = hex_str.trim();
+		let rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
+		let len = rawStr.length;
+		if (len % 2 !== 0) {
+			console.log("Illegal Format ASCII Code!");
+			return "";
+		}
+		let curCharCode;
+		let resultStr = [];
+		for (let i = 0; i < len; i = i + 2) {
+			curCharCode = parseInt(rawStr.substr(i, 2), 16); // ASCII Code Value
+			resultStr.push(String.fromCharCode(curCharCode));
+		}
+		return resultStr.join("");
+	}
 
 	function startNotice() {
 		var that = this;
@@ -273,10 +277,10 @@
 			characteristicId: notifyUuid.value, //第一步 开启监听 notityid  第二步发送指令 write
 			success(res) {
 				//接收蓝牙返回消息
-				uni.onBLECharacteristicValueChange((res)=>{
+				uni.onBLECharacteristicValueChange((res) => {
 
-				  console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`)
-				  console.log(hex2String(ab2hex(res.value)))
+					console.log(`characteristic ${res.characteristicId} has changed, now is ${res.value}`)
+					console.log(hex2String(ab2hex(res.value)))
 				})
 			},
 			fail(err) {
@@ -284,10 +288,11 @@
 			}
 		})
 	}
+
 	function write(str) {
 		var that = this
 		//this.string2buffer-->字符串转换成ArrayBufer（设备接收数据的格式ArrayBufer）
-		var buff = string2ArrayBuffer(str);  //9.0
+		var buff = string2ArrayBuffer(str); //9.0
 		uni.writeBLECharacteristicValue({
 			// 这里的 deviceId 需要在上面的 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
 			deviceId: connected_device.value,

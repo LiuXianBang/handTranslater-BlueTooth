@@ -1,0 +1,416 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.23408759581387859 -0.2620558595702192 0.9362316614764702 5.636687771403351
+  position -0.412305675902198 0.3782091015266516 0.1551244969673218
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorSize 5 5
+}
+Robot {
+  translation 4.09122e-11 0.06 0.0499975
+  rotation 1 0 0 0
+  children [
+    DEF part1 Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.02
+        radius 0.01
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.0471975511965974
+        axis 0 0.1 0
+        anchor 0 0 0.01
+      }
+      device [
+        RotationalMotor {
+          name "rm1"
+        }
+      ]
+      endPoint Solid {
+        translation -2.719007488965205e-16 3.6732099963600876e-08 0.009999992110330048
+        rotation 0.7745972382681174 0.44721228132222496 -0.44721392409223626 1.8234794270784789
+        children [
+          Solid {
+            translation 0 0.01 -1.01962e-08
+            rotation 1 0 0 -1.5707953071795862
+            children [
+              HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 1.0471975511965976
+                  axis 0 1 0
+                  anchor 0 0 0.01
+                }
+                device [
+                  RotationalMotor {
+                    name "rm2"
+                  }
+                ]
+                endPoint Solid {
+                  translation -5.0980999998520645e-09 0 0.010000008830168222
+                  rotation -0.9351134217046636 -0.25056249436433425 -0.2505620182025183 1.6378343900367784
+                  children [
+                    Solid {
+                      translation 0.01 0 -3.67321e-08
+                      rotation 0 1 0 1.5708
+                      children [
+                        USE part1
+                      ]
+                    }
+                    DEF hand_joint2 Shape {
+                      geometry Cylinder {
+                        height 0.01
+                        radius 0.004
+                      }
+                    }
+                  ]
+                }
+              }
+              USE part1
+            ]
+          }
+          DEF hand_joint Shape {
+            geometry Cylinder {
+              height 0.01
+              radius 0.004
+            }
+          }
+        ]
+        boundingObject USE hand_joint
+      }
+    }
+  ]
+  boundingObject USE part1
+  controller "my_controller"
+}
+Robot {
+  translation 0 0.08 0.049998
+  rotation 1 0 0 0
+  children [
+    DEF part1 Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.02
+        radius 0.01
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.0471975511965974
+        axis 0 0.1 0
+        anchor 0 0 0.01
+      }
+      device [
+        RotationalMotor {
+          name "rm1"
+        }
+      ]
+      endPoint Solid {
+        translation -2.719007488965205e-16 3.6732099963600876e-08 0.009999992110330048
+        rotation 0.7745972382681174 0.44721228132222496 -0.44721392409223626 1.8234794270784789
+        children [
+          Solid {
+            translation 0 0.01 -1.01962e-08
+            rotation 1 0 0 -1.5707953071795862
+            children [
+              HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 1.0471975511965976
+                  axis 0 1 0
+                  anchor 0 0 0.01
+                }
+                device [
+                  RotationalMotor {
+                    name "rm2"
+                  }
+                ]
+                endPoint Solid {
+                  translation -5.0980999998520645e-09 0 0.010000008830168222
+                  rotation -0.9351134217046636 -0.25056249436433425 -0.2505620182025183 1.6378343900367784
+                  children [
+                    Solid {
+                      translation 0.01 0 -3.67321e-08
+                      rotation 0 1 0 1.5708
+                      children [
+                        USE part1
+                      ]
+                    }
+                    DEF hand_joint2 Shape {
+                      geometry Cylinder {
+                        height 0.01
+                        radius 0.004
+                      }
+                    }
+                  ]
+                }
+              }
+              USE part1
+            ]
+          }
+          DEF hand_joint Shape {
+            geometry Cylinder {
+              height 0.01
+              radius 0.004
+            }
+          }
+        ]
+        boundingObject USE hand_joint
+      }
+    }
+  ]
+  name "robot(1)"
+  boundingObject USE part1
+  controller "my_controller"
+}
+Robot {
+  translation 0 0.1 0.049998
+  rotation 1 0 0 0
+  children [
+    DEF part1 Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.02
+        radius 0.01
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0.1 0
+        anchor 0 0 0.01
+      }
+      device [
+        RotationalMotor {
+          name "rm1"
+        }
+      ]
+      endPoint Solid {
+        translation 6.832654470023026e-09 3.673209996360087e-08 0.009999996055164788
+        rotation 1 -6.255872753526855e-11 -6.254687335897645e-11 1.5707999999276714
+        children [
+          Solid {
+            translation 0 0.01 -1.01962e-08
+            rotation 1 0 0 -1.5707953071795862
+            children [
+              HingeJoint {
+                jointParameters HingeJointParameters {
+                  axis 0 1 0
+                  anchor 0 0 0.01
+                }
+                device [
+                  RotationalMotor {
+                    name "rm2"
+                  }
+                ]
+                endPoint Solid {
+                  translation -1.0196199999537737e-08 0 0.01
+                  rotation -0.5773509358560258 -0.5773499358561371 -0.5773499358561368 2.094395307179586
+                  children [
+                    Solid {
+                      translation 0.01 0 -3.67321e-08
+                      rotation 0 1 0 1.5708
+                      children [
+                        USE part1
+                      ]
+                    }
+                    DEF hand_joint2 Shape {
+                      geometry Cylinder {
+                        height 0.01
+                        radius 0.004
+                      }
+                    }
+                  ]
+                }
+              }
+              USE part1
+            ]
+          }
+          DEF hand_joint Shape {
+            geometry Cylinder {
+              height 0.01
+              radius 0.004
+            }
+          }
+        ]
+        boundingObject USE hand_joint
+      }
+    }
+  ]
+  name "robot(2)"
+  boundingObject USE part1
+  controller "one"
+}
+Robot {
+  translation 0 0.12 0.049998
+  rotation 1 0 0 0
+  children [
+    DEF part1 Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.02
+        radius 0.01
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.0471975511965974
+        axis 0 0.1 0
+        anchor 0 0 0.01
+      }
+      device [
+        RotationalMotor {
+          name "rm1"
+        }
+      ]
+      endPoint Solid {
+        translation -2.719007488965205e-16 3.6732099963600876e-08 0.009999992110330048
+        rotation 0.7745972382681174 0.44721228132222496 -0.44721392409223626 1.8234794270784789
+        children [
+          Solid {
+            translation 0 0.01 -1.01962e-08
+            rotation 1 0 0 -1.5707953071795862
+            children [
+              HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 1.0471975511965976
+                  axis 0 1 0
+                  anchor 0 0 0.01
+                }
+                device [
+                  RotationalMotor {
+                    name "rm2"
+                  }
+                ]
+                endPoint Solid {
+                  translation -5.0980999998520645e-09 0 0.010000008830168222
+                  rotation -0.9351134217046636 -0.25056249436433425 -0.2505620182025183 1.6378343900367784
+                  children [
+                    Solid {
+                      translation 0.01 0 -3.67321e-08
+                      rotation 0 1 0 1.5708
+                      children [
+                        USE part1
+                      ]
+                    }
+                    DEF hand_joint2 Shape {
+                      geometry Cylinder {
+                        height 0.01
+                        radius 0.004
+                      }
+                    }
+                  ]
+                }
+              }
+              USE part1
+            ]
+          }
+          DEF hand_joint Shape {
+            geometry Cylinder {
+              height 0.01
+              radius 0.004
+            }
+          }
+        ]
+        boundingObject USE hand_joint
+      }
+    }
+  ]
+  name "robot(3)"
+  boundingObject USE part1
+  controller "my_controller"
+}
+Robot {
+  translation 0 0.14 0.049998
+  rotation 1 0 0 0
+  children [
+    DEF part1 Shape {
+      appearance PBRAppearance {
+      }
+      geometry Cylinder {
+        height 0.02
+        radius 0.01
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.0471975511965974
+        axis 0 0.1 0
+        anchor 0 0 0.01
+      }
+      device [
+        RotationalMotor {
+          name "rm1"
+        }
+      ]
+      endPoint Solid {
+        translation -2.719007488965205e-16 3.6732099963600876e-08 0.009999992110330048
+        rotation 0.7745972382681174 0.44721228132222496 -0.44721392409223626 1.8234794270784789
+        children [
+          Solid {
+            translation 0 0.01 -1.01962e-08
+            rotation 1 0 0 -1.5707953071795862
+            children [
+              HingeJoint {
+                jointParameters HingeJointParameters {
+                  position 1.0471975511965976
+                  axis 0 1 0
+                  anchor 0 0 0.01
+                }
+                device [
+                  RotationalMotor {
+                    name "rm2"
+                  }
+                ]
+                endPoint Solid {
+                  translation -5.0980999998520645e-09 0 0.010000008830168222
+                  rotation -0.9351134217046636 -0.25056249436433425 -0.2505620182025183 1.6378343900367784
+                  children [
+                    Solid {
+                      translation 0.01 0 -3.67321e-08
+                      rotation 0 1 0 1.5708
+                      children [
+                        USE part1
+                      ]
+                    }
+                    DEF hand_joint2 Shape {
+                      geometry Cylinder {
+                        height 0.01
+                        radius 0.004
+                      }
+                    }
+                  ]
+                }
+              }
+              USE part1
+            ]
+          }
+          DEF hand_joint Shape {
+            geometry Cylinder {
+              height 0.01
+              radius 0.004
+            }
+          }
+        ]
+        boundingObject USE hand_joint
+      }
+    }
+  ]
+  name "robot(4)"
+  boundingObject USE part1
+  controller "my_controller"
+}
