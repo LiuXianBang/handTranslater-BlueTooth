@@ -2,7 +2,7 @@
 	<view class="content">
 
 		<div class="card" data-bs-theme="dark" style="height: 100vh;border-radius: 0%;">
-			<div>
+			<div> 
 				<view class="d-flex justify-content-center" style="margin-top: 25vh;">
 					<view class="text-box" scroll-y="true">
 						<text style="font-size: 45px;">{{responce_text}}</text>
