@@ -47,7 +47,6 @@ if (uni.restoreGlobal) {
   };
   const bluetoothlist = vue.ref([]);
   const servicelist = vue.ref([]);
-  const audio_api = "http://10.40.131.62:8000/tts?text=";
   var audio_src = vue.ref("");
   var responce_text = vue.ref("_ _");
   var isshowed = vue.ref(false);
@@ -93,10 +92,10 @@ if (uni.restoreGlobal) {
   }
   function handle_message(input) {
     var message = translator(hex2String(ab2hex(input)));
-    formatAppLog("log", "at pages/index/index.vue:104", message);
+    formatAppLog("log", "at pages/index/index.vue:103", message);
     if (message != "" && message != void 0) {
       if (message == "[stop]") {
-        formatAppLog("log", "at pages/index/index.vue:107", translate_word.value);
+        formatAppLog("log", "at pages/index/index.vue:106", translate_word.value);
         if (translate_word.value.length > 0) {
           if (translate_word.value.find((element) => element == "什么") != void 0 && translate_word.value.find((element) => element == "时间" != void 0)) {
             responce_text.value = "现在什么时间？";
@@ -115,10 +114,10 @@ if (uni.restoreGlobal) {
   }
   function gpt_request(words) {
     uni.request({
-      url: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      url: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
       //仅为示例，并非真实接口地址。
       data: {
-        model: "GLM-4-0520",
+        model: "qwen-plus",
         messages: [{
           role: "user",
           content: "你是一位熟练手语的专家，你可以通过词组组成的句子理解手语的真正含义。请用中文使下面的词组构成符合自然表达的句子，如果无法组成句子则直接返回词组，切记不要改变原意且不管是否可以表达都无需添加任何额外的信息或评论，保持回复的简洁和直接：" + words
@@ -126,35 +125,29 @@ if (uni.restoreGlobal) {
         }]
       },
       header: {
-        "Authorization": "Bearer 0ed2bef9cc03d071f5833d883693eb71.ErbGECCEmtlB85J8"
+        "Authorization": "Bearer sk-f333c73c2e4846ec954b276ef3026111"
         //自定义请求头信息
       },
       method: "POST",
       success: (res) => {
-        formatAppLog("log", "at pages/index/index.vue:145", res.data);
+        formatAppLog("log", "at pages/index/index.vue:144", res.data);
         var choices = res.data.choices;
         var content = choices[0];
         var message = choices[0].message;
         var content = message.content;
-        formatAppLog("log", "at pages/index/index.vue:150", content);
+        formatAppLog("log", "at pages/index/index.vue:149", content);
         responce_text.value = content;
         play_audio(responce_text.value);
       }
     });
   }
   function test_request() {
+    play_audio("测试测试");
   }
   function play_audio(words) {
-    formatAppLog("log", "at pages/index/index.vue:166", "播放 " + audio_api + words);
-    var resource_src = audio_api + words;
-    if (resource_src == audio_src.value) {
-      audio_src.value = "";
-      setTimeout(() => {
-        audio_src.value = resource_src;
-      }, 200);
-    } else {
-      audio_src.value = resource_src;
-    }
+    formatAppLog("log", "at pages/index/index.vue:162", "播放 " + words);
+    const token = "24.6d74760d2c329ef383f839280099a656.2592000.1725344446.282335-102802582";
+    audio_src.value = "https://tsn.baidu.com/text2audio?tex=" + words + "&lan=zh&cuid=382009&ctp=1&tok=" + token;
   }
   function show_presentation() {
     setTimeout(() => {
@@ -170,7 +163,7 @@ if (uni.restoreGlobal) {
     }, 1e3);
   }
   function auto_connect(max_retry, retry = 0) {
-    formatAppLog("log", "at pages/index/index.vue:197", max_retry, retry, bluetooth_status.value);
+    formatAppLog("log", "at pages/index/index.vue:184", max_retry, retry, bluetooth_status.value);
     if (retry == max_retry) {
       uni.showToast({
         title: "蓝牙打开失败",
@@ -207,7 +200,7 @@ if (uni.restoreGlobal) {
       }
       if (bluetooth_status.value.discovery == true) {
         if (bluetooth_status.value.find_target == null) {
-          formatAppLog("log", "at pages/index/index.vue:238", "等待找到目标");
+          formatAppLog("log", "at pages/index/index.vue:225", "等待找到目标");
           bluetooth_status.value.find_target = false;
           retry = 0;
         }
@@ -219,7 +212,7 @@ if (uni.restoreGlobal) {
         if (bluetooth_status.value.find_target == true) {
           if (bluetooth_status.value.connected == null) {
             connetBlue(bluetoothlist.value[0]);
-            formatAppLog("log", "at pages/index/index.vue:251", "尝试连接");
+            formatAppLog("log", "at pages/index/index.vue:238", "尝试连接");
             uni.hideLoading();
             uni.showLoading({
               title: "尝试连接设备"
@@ -235,7 +228,7 @@ if (uni.restoreGlobal) {
           }
           if (bluetooth_status.value.connected == true) {
             if (bluetooth_status.value.get_service == null) {
-              formatAppLog("log", "at pages/index/index.vue:267", "连接成功");
+              formatAppLog("log", "at pages/index/index.vue:254", "连接成功");
               getservices();
               bluetooth_status.value.get_service = false;
               uni.hideLoading();
@@ -272,7 +265,7 @@ if (uni.restoreGlobal) {
               }
               if (bluetooth_status.value.find_target_service == true) {
                 if (bluetooth_status.value.get_CharacteId == null) {
-                  formatAppLog("log", "at pages/index/index.vue:307", "找到目标服务");
+                  formatAppLog("log", "at pages/index/index.vue:294", "找到目标服务");
                   getCharacteId(bluetooth_status.value.target_service);
                   bluetooth_status.value.get_CharacteId = false;
                   uni.hideLoading();
@@ -289,9 +282,9 @@ if (uni.restoreGlobal) {
                 }
                 if (bluetooth_status.value.get_CharacteId == true) {
                   if (bluetooth_status.value.notice == null) {
-                    formatAppLog("log", "at pages/index/index.vue:326", "获得CharacteId");
+                    formatAppLog("log", "at pages/index/index.vue:313", "获得CharacteId");
                     startNotice();
-                    formatAppLog("log", "at pages/index/index.vue:328", "开始监听");
+                    formatAppLog("log", "at pages/index/index.vue:315", "开始监听");
                     uni.hideLoading();
                     uni.showLoading({
                       title: "开始监听"
@@ -332,7 +325,7 @@ if (uni.restoreGlobal) {
       deviceId: bluetooth_status.value.connected_device,
       success: function(res) {
         bluetooth_status.value.get_service = true;
-        formatAppLog("log", "at pages/index/index.vue:376", res);
+        formatAppLog("log", "at pages/index/index.vue:363", res);
         for (var i = 0; i < res.services.length; i++) {
           servicelist.value.push(res.services[i]);
         }
@@ -343,14 +336,14 @@ if (uni.restoreGlobal) {
     });
   }
   function getCharacteId(services) {
-    formatAppLog("log", "at pages/index/index.vue:389", services);
+    formatAppLog("log", "at pages/index/index.vue:376", services);
     uni.getBLEDeviceCharacteristics({
       // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
       deviceId: bluetooth_status.value.connected_device,
       // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
       serviceId: services,
       success: function(res) {
-        formatAppLog("log", "at pages/index/index.vue:396", res);
+        formatAppLog("log", "at pages/index/index.vue:383", res);
         for (var i = 0; i < res.characteristics.length; i++) {
           var model = res.characteristics[i];
           if (model.properties.write) {
@@ -372,13 +365,13 @@ if (uni.restoreGlobal) {
   function initBlue() {
     uni.openBluetoothAdapter({
       success(res) {
-        formatAppLog("log", "at pages/index/index.vue:420", "初始化蓝牙成功");
-        formatAppLog("log", "at pages/index/index.vue:421", res);
+        formatAppLog("log", "at pages/index/index.vue:407", "初始化蓝牙成功");
+        formatAppLog("log", "at pages/index/index.vue:408", res);
         bluetooth_status.value.init_blue = true;
       },
       fail(err) {
-        formatAppLog("log", "at pages/index/index.vue:425", "初始化蓝牙失败");
-        formatAppLog("error", "at pages/index/index.vue:426", err);
+        formatAppLog("log", "at pages/index/index.vue:412", "初始化蓝牙失败");
+        formatAppLog("error", "at pages/index/index.vue:413", err);
         bluetooth_status.value.init_blue = false;
       }
     });
@@ -387,14 +380,14 @@ if (uni.restoreGlobal) {
     bluetoothlist.value = [];
     uni.startBluetoothDevicesDiscovery({
       success(res) {
-        formatAppLog("log", "at pages/index/index.vue:437", "开始搜索");
+        formatAppLog("log", "at pages/index/index.vue:424", "开始搜索");
         bluetooth_status.value.discovery = true;
         uni.onBluetoothDeviceFound(found);
       },
       fail(err) {
         bluetooth_status.value.discovery = false;
-        formatAppLog("log", "at pages/index/index.vue:445", "搜索失败");
-        formatAppLog("error", "at pages/index/index.vue:446", err);
+        formatAppLog("log", "at pages/index/index.vue:432", "搜索失败");
+        formatAppLog("error", "at pages/index/index.vue:433", err);
       }
     });
   }
@@ -404,12 +397,12 @@ if (uni.restoreGlobal) {
       // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
       deviceId,
       success(res) {
-        formatAppLog("log", "at pages/index/index.vue:458", res);
+        formatAppLog("log", "at pages/index/index.vue:445", res);
         bluetooth_status.value.connected_device = device.deviceId;
         bluetooth_status.value.connected = true;
       },
       fail(res) {
-        formatAppLog("log", "at pages/index/index.vue:463", res);
+        formatAppLog("log", "at pages/index/index.vue:450", res);
         bluetooth_status.value.connected = false;
       }
     });
@@ -421,7 +414,7 @@ if (uni.restoreGlobal) {
         continue;
       }
       if (device.name == bluetooth_status.value.target_name) {
-        formatAppLog("log", "at pages/index/index.vue:478", "找到目标");
+        formatAppLog("log", "at pages/index/index.vue:465", "找到目标");
         bluetooth_status.value.find_target = true;
         uni.stopBeaconDiscovery();
         bluetoothlist.value.push(device);
@@ -443,7 +436,7 @@ if (uni.restoreGlobal) {
     let rawStr = trimedStr.substr(0, 2).toLowerCase() === "0x" ? trimedStr.substr(2) : trimedStr;
     let len = rawStr.length;
     if (len % 2 !== 0) {
-      formatAppLog("log", "at pages/index/index.vue:519", "Illegal Format ASCII Code!");
+      formatAppLog("log", "at pages/index/index.vue:506", "Illegal Format ASCII Code!");
       return "";
     }
     let curCharCode;
@@ -469,7 +462,7 @@ if (uni.restoreGlobal) {
         uni.onBLECharacteristicValueChange((res2) => {
           formatAppLog(
             "log",
-            "at pages/index/index.vue:560",
+            "at pages/index/index.vue:547",
             `characteristic ${res2.characteristicId} has changed, now is ${res2.value}`
           );
           handle_message(res2.value);
@@ -477,7 +470,7 @@ if (uni.restoreGlobal) {
         bluetooth_status.value.notice = true;
       },
       fail(err) {
-        formatAppLog("log", "at pages/index/index.vue:567", err);
+        formatAppLog("log", "at pages/index/index.vue:554", err);
         bluetooth_status.value.notice = false;
       }
     });
@@ -486,7 +479,7 @@ if (uni.restoreGlobal) {
   const _sfc_main$1 = {
     data() {
       return {
-        debug: false,
+        debug: true,
         responce_text,
         isshowed,
         audio_src,

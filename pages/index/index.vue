@@ -47,7 +47,6 @@
 	const bluetoothlist = ref([])
 	const servicelist = ref([])
 
-	const audio_api = "http://10.40.131.62:8000/tts?text="
 	var audio_src = ref("")
 
 	var responce_text = ref("_ _")
@@ -128,9 +127,9 @@
 
 	function gpt_request(words) {
 		uni.request({
-			url: 'https://open.bigmodel.cn/api/paas/v4/chat/completions', //仅为示例，并非真实接口地址。
+			url: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', //仅为示例，并非真实接口地址。
 			data: {
-				model: 'GLM-4-0520',
+				model: 'qwen-plus',
 				messages: [{
 					role: "user",
 					content: "你是一位熟练手语的专家，你可以通过词组组成的句子理解手语的真正含义。请用中文使下面的词组构成符合自然表达的句子，如果无法组成句子则直接返回词组，切记不要改变原意且不管是否可以表达都无需添加任何额外的信息或评论，保持回复的简洁和直接：" + words
@@ -138,7 +137,7 @@
 				}],
 			},
 			header: {
-				'Authorization': 'Bearer 0ed2bef9cc03d071f5833d883693eb71.ErbGECCEmtlB85J8' //自定义请求头信息
+				'Authorization': 'Bearer sk-f333c73c2e4846ec954b276ef3026111' //自定义请求头信息
 			},
 			method: "POST",
 			success: (res) => {
@@ -151,30 +150,18 @@
 				responce_text.value = content
 				play_audio(responce_text.value)
 			}
-		});
+		});	
 	}
 
 	function test_request() {
-		// gpt_request(["帮我", "送", "家", "谢谢"])
+		// gpt_request(["什么", "时间"])
+		play_audio("测试测试")
 		
 	}
-	// watch(responce_text,()=>{
-	// 	console.log("播放 "+ audio_api+words)
-	// 	play_audio(responce_text.value)
-	// })
 	function play_audio(words) {
-		console.log("播放 " + audio_api + words)
-		var resource_src = audio_api + words
-		if (resource_src == audio_src.value) {
-			audio_src.value = ""
-			setTimeout(() => {
-				audio_src.value = resource_src
-			}, 200)
-
-		} else {
-			audio_src.value = resource_src
-		}
-
+		console.log("播放 "  + words)
+		const token = "24.6d74760d2c329ef383f839280099a656.2592000.1725344446.282335-102802582"
+		audio_src.value = "https://tsn.baidu.com/text2audio?tex="+words+"&lan=zh&cuid=382009&ctp=1&tok="+token
 	}
 
 	function show_presentation() {
@@ -599,7 +586,7 @@
 		export default {
 			data() {
 				return {
-					debug: false,
+					debug: true,
 					responce_text,
 					isshowed,
 					audio_src,
