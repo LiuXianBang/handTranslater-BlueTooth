@@ -106,14 +106,14 @@
 				console.log(translate_word.value)
 				if(translate_word.value.length >0){
 					
-					if(translate_word.value.find((element) => element == "什么") != undefined && translate_word.value.find((element) => element == "时间" != undefined) ){
-						responce_text.value = "现在什么时间？"
-						play_audio(responce_text.value)
-						translate_word.value = []
-					}else{
-						gpt_request(translate_word.value)
-						translate_word.value = []
-					}
+					// if(translate_word.value.find((element) => element == "什么") != undefined && translate_word.value.find((element) => element == "时间" != undefined) ){
+					// 	responce_text.value = "现在什么时间？"
+					// 	play_audio(responce_text.value)
+					// 	translate_word.value = []
+					// }else{
+					gpt_request(translate_word.value)
+					translate_word.value = []
+					// }
 
 				}
 
